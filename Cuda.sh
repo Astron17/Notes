@@ -1,0 +1,1 @@
+nvcc --version  # to check the cuda version

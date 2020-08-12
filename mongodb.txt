@@ -1,0 +1,179 @@
+################# BASIC OPERATIONS ###########################
+
+# show dbs;
+- show all the database available
+
+# use databaseName;
+- if not exist = then create database with databaseName
+- if exist = switch to database with databaseName
+
+# db;
+- show current database name
+
+
+# db.createUser({
+  user:"sai",
+  pwd:"1234",
+  roles:["readWrite", "dbAdmin"]
+  });
+- create username and password for the database (not so important)
+
+# db.createCollections('friends');
+- create collections (equivalent to  tables in sql) with name 'friends'
+
+# show collections;
+- show all the collections within the database
+
+
+################# INSERT OPERATIONS ###########################
+
+# db.friends.insert({name:"vb",gender:"Female"});
+- insert data into collections
+
+# db.friends.insert({_id:123, name:"sai", gender:"male"});
+- insert data into collections with custom ID
+
+- db.friends.insertOne({name:"arun", gender:"male"});
+- insert one and only data, acknowledges with ID.
+
+- db.friends.insertMany([{name:"vk", gender:"male"},{Name:"bala",city:"chennai"}]);
+- insert many data, acknowledges with IDs.
+
+
+################# UPDATE OPERATIONS ###########################
+
+# db.friends.update({name:"vb"}, {name:"vb", gender:"male"});
+- updates the value of gender with name = "vb" **deletes all the data within the date and updates totally new**
+
+
+# db.friends.update({name:"vb"}, { $set : {gender:"male"} });
+- updates only the gender column with the name "vb"; **this is more safer**
+- updates only for the first name with "vb"
+
+# db.friends.update({name:"vb"}, { $set : {age:20} });
+- if exists = updates the age column
+- if not exists = add the age column
+
+# db.friends.update({name:"vb"}, { $inc : {age:5} });
+- increments the value of age with 5
+- updates only for the first column with name "vb"
+
+# db.friends.update({name:"vb"}, { $unset : {age:1} });
+- remove the age column in the name "vb"
+
+# db.friends.update({name:"ashok"}, {name:"ashok", gender:"female"}, {upsert:true});
+- another kind of insert, if "ashok" not exists, then it inserts
+
+# db.friends.update({name:"vb"}, { $rename : {"gender":"sex"} });
+- renames the gender column with sex
+- updates only for the first column with name "vb"
+
+################# BASIC FIND OPERATIONS ###########################
+
+# db.friends.find();
+- shows all the data in the collection "friends"
+
+# db.friends.find().pretty();
+- shows all the data in the collection "friends" **better readable**
+
+# db.friends.find().count();
+- counts all the data in the collection "friends"
+
+# db.friends.find().limit(1);
+- shows specific number of data mentioned in limit of collection "friends"
+
+# db.friends.find({name:"ashok"});
+- show all the details with name "ashok" in the collection "friends"
+
+# db.friends.find({name:"vb"},{"sex":1}).pretty()
+- show only sex column in name "vb"
+
+# db.friends.find({name:"vb"},{"sex":1, _id:0}).pretty()
+- show only sex column in name "vb" without ID column (to display set to 1, not display set to 0)
+
+
+################# LOGICAL FIND OPERATIONS ###########################
+
+# db.friends.find({$or:[{name:"ashok"}, {name:"vb"}]}).pretty();
+- OR operation
+
+# db.friends.find({$and:[{name:"ashok"}, {name:"vb"}]}).pretty();
+- AND operation
+
+# db.friends.find({name:{$in:["ashok","vb"]}}).pretty();
+- IF name IN "ashok" and "vb"
+
+# db.friends.find({name:{$nin:["ashok","vb"]}}).pretty();
+- IF name NOT IN "ashok" and "vb"
+
+################# COMPARISION FIND OPERATIONS ###########################
+
+# db.friends.find({age:{$lt:24}}).pretty();
+- age LESS THAN 24
+
+# db.friends.find({age:{$lte:24}}).pretty();
+- age LESS THAN EQUAL TO 24
+
+# db.friends.find({age:{$gt:24}}).pretty();
+- age GREATER THAN 24
+
+# db.friends.find({age:{$gte:24}}).pretty();
+- age GREATER THAN EQUAL TO 24
+
+# db.friends.find({age:{$eq:24}}).pretty();
+- age EQUAL TO 24
+
+# db.emp.find({Age:{$not:{$lt:38}}}).pretty()
+
+
+################# SORT FIND OPERATIONS ###########################
+
+# db.friends.find().sort({age:1}).pretty();
+-) 1 = asc order
+
+# db.friends.find().sort({age:-1}).pretty();
+-)  -1 = desc order
+
+################# COMBINED OPERATIONS ###########################
+
+# db.friends.find().limit(1).sort({age:1}).pretty();
+- limit and sort
+
+
+################# FIND OBJECTS OPERATIONS ###########################
+# db.friends.find({"address.city":"chennai"}).pretty();
+- if address is object itself
+
+
+################# FOREACH FUNCTION ###########################
+# db.friends.find().forEach(function(doc){print(doc.name + " is my friend")});
+- "doc" here is just a variable
+
+################# REMOVE/DELETE FUNCTIONS ###########################
+
+# db.friends.remove({name:"vk"});
+- delete all data with name "vk"
+
+# db.friends.remove({name:"vk"}, 1);
+- delete one data with name "vk"
+
+# db.friends.deleteOne({name:"vk"});
+- delete one data with name "vk"
+
+# db.friends.drop()
+- deletes "friends" collection
+
+# db.dropDatabase()
+- delete current database
+
+
+################# IMPORT/EXPORT FUNCTIONS ###########################
+
+# mongodump --db databaseName
+- export database
+
+# mongorestore --db NEWdatabaseName databaseName/
+- import database
+
+# exit
+- exit of mongodb
